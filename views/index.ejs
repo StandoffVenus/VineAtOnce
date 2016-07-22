@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="index.css" />
+  </head>
+
+  <body style="background: #EEE;">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="jumbotron text-center col-md-offset-3 col-md-6 indexHeader">
+          <h1>Welcome to <em>VineAtOnce</em></h1>
+          <p>Find the user you want to <em>VineAtOnce</em>!</p>
+        </div>
+
+        <div class="bg-info col-md-offset-4 col-md-4 indexForm">
+          <form role="form" method="POST" action='/'>
+            <h3 class="col-md-12"><em>Find users</em></h3>
+            <div class="form-group">
+              <div class="input-group">
+                  <span class="input-group-addon"><strong><em>User:</em></strong></span>
+                  <em><input type="text" class="form-control" placeholder="Username" name="username" id="vineUsername" /></em>
+                  <span class="input-group-btn"><strong><input type="submit" class="btn btn-danger" value="Search!" id="submitButton" /></strong></span>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <% if (content.username !== '') { %>
+        <h1 class="jumbotron text-center"><em>"<%= content.username; %>"</em></h1>
+      <% } %>
+
+      <div class="row">
+        <% if (content.results.length !== 0) { %>
+          <% for (var i = 0; i < content.results.length; i++) { %>
+            <div class="vineThumbnails">
+              <img class="thumbnailImage" src="<%= JSON.stringify(content.results[i].avatarUrl).split('"')[1]; %>" alt="Failed to load avatar." />
+              <% var apiLink = JSON.stringify(content.results[i].userId).split('"')[1]; %>
+              <% if (apiLink !== null) { %>
+                <video class="thumbnailVideo" apiLink="<%= apiLink %>" loop preload="auto">
+                  Failed to load video.
+                </video>
+              <% } %>
+              <h4 class="text-center"><%= JSON.stringify(content.results[i].username).split('"')[1]; %></h4>
+            </div>
+          <% } %>
+        <% } else if (content.username !== '') { %>
+          <h2 class="text-danger" style="border-radius: 2em; background: #999; padding: 2em; margin-left: 30%; margin-right: 30%; text-align: center;">Failed to find a user relevant to the username "<em><%= content.username %></em>."</h2>
+        <% } %>
+      </div>
+
+      <script src="addVideoListeners.js"></script>
+    </div>
+  </body>
+</html>
