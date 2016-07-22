@@ -1,0 +1,42 @@
+.vineThumbnails {
+  margin: 2px;
+  display: inline-block;
+  background: #FFF;
+  border-radius: 1em;
+  opacity: .65;
+}
+
+.thumbnailVideo {
+  display: none;
+  opacity: 1;
+  background: black;
+  position: relative;
+}
+
+.thumbnailImage {
+  display: inline-block;
+  border-radius: 1em;
+}
+
+.vineThumbnails:hover {
+  opacity: 1;
+  background: linear-gradient(to right, #FFF, #DDD);
+}
+
+.vineThumbnails:hover .thumbnailVideo {
+  display: inline-block;
+}
+
+.vineThumbnails:hover .thumbnailImage {
+  display: none;
+}
+
+.indexForm {
+  background: lightgrey;
+  border-radius: 1em;
+}
+
+.indexHeader {
+  margin-top: 2em;
+  background: lightgrey;
+}
