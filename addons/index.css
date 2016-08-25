@@ -1,20 +1,23 @@
 .vineThumbnails {
-  margin: 2px;
-  display: inline-block;
+  display: block;
+  position: relative;
   background: #FFF;
   border-radius: 1em;
   opacity: .65;
+  width: 600px;
+  margin: auto !important;
 }
 
 .thumbnailVideo {
-  display: none;
-  opacity: 1;
+  opacity: 0;
+  border-radius: 1em;
   background: black;
-  position: relative;
+  position: absolute;
+  top: 0px;
 }
 
 .thumbnailImage {
-  display: inline-block;
+  opacity: 1;
   border-radius: 1em;
 }
 
@@ -24,11 +27,8 @@
 }
 
 .vineThumbnails:hover .thumbnailVideo {
-  display: inline-block;
-}
-
-.vineThumbnails:hover .thumbnailImage {
-  display: none;
+  opacity: 1;
+  position: absolute;
 }
 
 .indexForm {

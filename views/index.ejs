@@ -27,26 +27,49 @@
         </div>
       </div>
 
-      <% if (content.username !== '') { %>
-        <h1 class="jumbotron text-center"><em>"<%= content.username; %>"</em></h1>
+      <br />
+      <br />
+
+      <% if (results.length > 0) { %>
+        <h1 class="jumbotron text-center"><em>"<%= username; %>"</em></h1>
       <% } %>
 
+      <br />
+      <br />
+
+      <div class="row col-lg-4 col-lg-offset-4">
+        <% if (previousPage) { %>
+          <a class="btn btn-success pull-left" href="<%= `/?username=${username}&page=${Number(page) - 1}` %>"><h3>Back a page.</h3></a>
+        <% } %>
+        <% if (nextPage) { %>
+          <a class="btn btn-success pull-right" href="<%= `/?username=${username}&page=${Number(page) + 1}` %>"><h3>Forward a page.</h3></a>
+        <% } %>
+      </div>
+
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+
       <div class="row">
-        <% if (content.results.length !== 0) { %>
-          <% for (var i = 0; i < content.results.length; i++) { %>
+        <% if (results.length !== 0) { %>
+          <% for (var i = 0; i < results.length; i++) { %>
             <div class="vineThumbnails">
-              <img class="thumbnailImage" src="<%= JSON.stringify(content.results[i].avatarUrl).split('"')[1]; %>" alt="Failed to load avatar." />
-              <% var apiLink = JSON.stringify(content.results[i].userId).split('"')[1]; %>
+              <img class="thumbnailImage" src="<%= JSON.stringify(results[i].avatarUrl).split('"')[1]; %>" alt="Failed to load avatar." />
+              <% var apiLink = JSON.stringify(results[i].userId).split('"')[1]; %>
               <% if (apiLink !== null) { %>
-                <video class="thumbnailVideo" apiLink="<%= apiLink %>" loop preload="auto">
+                <video class="thumbnailVideo" apiLink="<%= apiLink %>" preload="auto">
                   Failed to load video.
                 </video>
               <% } %>
-              <h4 class="text-center"><%= JSON.stringify(content.results[i].username).split('"')[1]; %></h4>
+              <h3 class="text-center"><a href="<%= `/vao/${userids[i]}` %>"><%= JSON.stringify(results[i].username).split('"')[1]; %></a></h3>
             </div>
+            <br />
+            <br />
           <% } %>
-        <% } else if (content.username !== '') { %>
-          <h2 class="text-danger" style="border-radius: 2em; background: #999; padding: 2em; margin-left: 30%; margin-right: 30%; text-align: center;">Failed to find a user relevant to the username "<em><%= content.username %></em>."</h2>
+        <% } else if (username !== '') { %>
+          <h2 class="text-danger" style="border-radius: 2em; background: #999; padding: 2em; margin-left: 30%; margin-right: 30%; text-align: center;">Failed to find any results...</h2>
         <% } %>
       </div>
 

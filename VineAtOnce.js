@@ -16,37 +16,84 @@ app.use(bodyParser.json());
 app.use(express.static('addons'));
 
 app.get('/', (req, res, next) => {
-  res.render('index', {
-    content: {
-      username: '',
-      results: []
-    }
-  });
+  if (req.query.username === undefined) {
+    res.render('index', {
+      content: {
+        username: '',
+        results: []
+      }
+    });
 
-  next();
+    next();
+  }
+  else {
+    if (req.query.page === undefined || Number(req.query.page) === NaN)
+      req.query.page = 1;
+    https.get(`https://api.vineapp.com/users/search/${req.query.username}?page=${req.query.page}`, (httpResponse) => {
+      let str = '';
+
+      httpResponse.on('data', (chunk) => {
+        str += chunk;
+      });
+
+      httpResponse.on('end', () => {
+        str = str.replace(/(["][:]\s*)(\.?\d+)(\.\d*)?/g, "$1\"$2$3\"");
+        let data = JSON.parse(str).data;
+        let idArr = [];
+
+        try {
+          data.records.forEach( (user) => {
+            idArr.push(user.userId);
+          });
+        }
+        catch (err) {}
+
+        res.render('index', {
+          username: req.query.username,
+          userids: idArr,
+          page: req.query.page,
+          results: data.records || [],
+          nextPage: (data.nextPage !== undefined && data.nextPage !== null) ? true : false,
+          previousPage: (data.previousPage !== undefined && data.previousPage !== null) ? true : false
+        });
+
+        next();
+      });
+    })
+  }
 });
 
-app.post('/', (req, vineRes, next) => {
-  https.get(`https://api.vineapp.com/users/search/${req.body.username}`, (res) => {
+app.post('/', (req, res) => {
+  res.redirect(`/?username=${req.body.username}&page=1`);
+});
+
+app.get('/vao/:userid', (req, res) => {
+  https.get(`https://api.vineapp.com/timelines/users/${req.params.userid}`, (httpResponse) => {
     let str = '';
 
-    res.on('data', (chunk) => {
+    httpResponse.on('data', (chunk) => {
       str += chunk;
     });
 
-    res.on('end', () => {
-      str = str.replace(/([:\s]+)(\.?\d+)(\.\d*)?/g, "$1\"$2$3\"");
+    httpResponse.on('end', () => {
+      let links = [];
+      let data = JSON.parse(str).data;
 
-      vineRes.render('index', {
-        content: {
-          username: req.body.username,
-          results: JSON.parse(str).data.records || [],
-        }
+      try {
+        data.records.forEach( (record) => {
+          links.push(record.videoUrl);
+        });
+      }
+      catch (err) {}
+
+      res.render('vao', {
+        userid: req.params.userid,
+        links: links
       });
-
-      next();
     });
   });
 });
+
+app.use(express.static('addons'));
 
 app.listen(3000);
