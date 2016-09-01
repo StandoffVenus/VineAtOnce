@@ -18,10 +18,8 @@ app.use(express.static('addons'));
 app.get('/', (req, res, next) => {
   if (req.query.username === undefined) {
     res.render('index', {
-      content: {
-        username: '',
-        results: []
-      }
+      username: '',
+      results: []
     });
 
     next();
@@ -68,29 +66,8 @@ app.post('/', (req, res) => {
 });
 
 app.get('/vao/:userid', (req, res) => {
-  https.get(`https://api.vineapp.com/timelines/users/${req.params.userid}`, (httpResponse) => {
-    let str = '';
-
-    httpResponse.on('data', (chunk) => {
-      str += chunk;
-    });
-
-    httpResponse.on('end', () => {
-      let links = [];
-      let data = JSON.parse(str).data;
-
-      try {
-        data.records.forEach( (record) => {
-          links.push(record.videoUrl);
-        });
-      }
-      catch (err) {}
-
-      res.render('vao', {
-        userid: req.params.userid,
-        links: links
-      });
-    });
+  res.render('vao', {
+    userId: req.params.userid,
   });
 });
 

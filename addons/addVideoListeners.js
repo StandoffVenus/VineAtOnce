@@ -23,12 +23,12 @@
 
           vineProfile.addEventListener('mouseleave', () => {
             video.pause();
+            video.currentTime = 0;
+            video.load();
           });
         }
       }
-      catch (err) {
-
-      }
+      catch (err) {}
       finally {
         video.setAttribute('width', 600);
         video.setAttribute('height', 600);

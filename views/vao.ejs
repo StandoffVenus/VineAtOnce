@@ -5,7 +5,46 @@
     <link rel="stylesheet" href="index.css" />
   </head>
 
-  <% links.forEach( (link) => { %>
-    <video src="<%= link %>" autoplay="true" loop="true"></video>
-  <% }) %>
+  <div id="videos">
+  </div>
+
+  <% let userLink = `https://api.vineapp.com/timelines/users/${userId}` %>
+  <script>
+    let page = 1;
+    let xhr = new XMLHttpRequest();
+    let requests = 0;
+
+    xhr.onreadystatechange = (e) => {
+      if (xhr.readyState == 4) {
+        try {
+          let response = JSON.parse(xhr.responseText);
+
+          if (response.data.nextPage !== null) {
+            page++;
+            xhr.open('GET', `<%= userLink %>?page=${page}`, true);
+            xhr.send();
+          }
+
+          for (i = 0; i < response.data.records.length; i++) {
+            if (requests > 500) {
+              break;
+            }
+
+            requests++;
+            let video = document.createElement('video');
+            video.src = response.data.records[i].videoLowURL;
+            video.autoplay = true;
+            video.loop = true;
+            //video.style.display = "none";
+
+            document.getElementById('videos').appendChild(video);
+          }
+        }
+        catch (err) {}
+      }
+    }
+
+    xhr.open('GET', `<%= userLink %>?page=${page}`, true);
+    xhr.send();
+  </script>
 </html>
